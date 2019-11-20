@@ -13,7 +13,11 @@ def _execute_insert(self, conn, keys, data_iter):
     data = [dict((k, v) for k, v in zip(keys, row)) for row in data_iter]
     conn.execute(self.insert_statement().values(data))
 
-SQLTable._execute_insert = _execute_insert
+
+def monkey_patch_pandas_sql():
+    """Older versions of pandas performed inserts very slowly, so this was a fix.
+    If you're using current versions of pandas I don't think this is necessary"""
+    SQLTable._execute_insert = _execute_insert
 
 
 import sys
